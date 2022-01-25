@@ -10,6 +10,7 @@ const verifyPath = '/verify'
 
 exports.handler = async (event) => {
 	console.log('Request Event: ', event)
+	console.log('Surprise motherfucker')
 	let response
 	switch (true) {
 		case event.httpMethod === 'GET' && event.path === healthPath:
