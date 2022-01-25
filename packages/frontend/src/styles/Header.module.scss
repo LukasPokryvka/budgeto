@@ -1,0 +1,42 @@
+@import './utilities/variables.scss';
+
+.link {
+	text-decoration: none;
+	color: black;
+}
+
+.navigation {
+	background-color: $primary;
+	height: $xlarge;
+	font-weight: 700;
+	margin-bottom: $medium;
+
+	header {
+		ul {
+			display: flex;
+			align-items: center;
+
+			li {
+				padding: 0 $small;
+				display: flex;
+				align-items: center;
+
+				a {
+					text-decoration: none;
+					color: $light;
+					padding: $small $medium;
+					border-radius: 20px;
+				}
+
+				a:hover {
+					background-color: $light;
+					color: $primary;
+				}
+			}
+		}
+	}
+
+	&__height {
+		height: 100%;
+	}
+}

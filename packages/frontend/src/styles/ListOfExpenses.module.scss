@@ -1,0 +1,15 @@
+@import './utilities/variables.scss';
+
+.expenses {
+	ul {
+		background-color: $secondary;
+		width: 300px;
+
+		li {
+			padding: $small;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+	}
+}

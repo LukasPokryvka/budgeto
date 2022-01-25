@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+  dynamodb:
+    image: amazon/dynamodb-local
+    hostname: dynamodb
+    container_name: dynamodb
+    ports:
+      - '8000:8000'
+    networks:
+      - local-api
+
+networks:
+  local-api:
+    external: true
+    name: local-api
