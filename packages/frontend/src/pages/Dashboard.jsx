@@ -117,7 +117,7 @@ const Dashboard = () => {
 								{title}
 							</Typography>
 							<Button variant="contained" sx={{ mr: '1em' }} color="secondary">
-								Login
+								Loginik
 							</Button>
 							<Button variant="contained" color="warning">
 								Register
