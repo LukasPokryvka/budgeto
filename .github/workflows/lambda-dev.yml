@@ -13,9 +13,8 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '12'
-      - name: go to lambda directory
-        run: cd packages/serverless
       - name: npm install
         env:
           CI: true
+        working-directory: ./packages/serverless
         run: npm ci
