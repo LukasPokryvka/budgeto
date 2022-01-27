@@ -4,9 +4,6 @@ import DashboardIcon from '@mui/icons-material/Dashboard'
 import PaymentsIcon from '@mui/icons-material/Payments'
 import PersonIcon from '@mui/icons-material/Person'
 
-import Expenses from '../pages/Expenses'
-import EditExpense from '../pages/EditExpense'
-
 const routes = [
 	{
 		path: '/',

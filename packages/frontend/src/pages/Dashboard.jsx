@@ -1,4 +1,4 @@
-import { useState, Fragment } from 'react'
+import { useState, Fragment, lazy, Suspense } from 'react'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import { BrowserRouter } from 'react-router-dom'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -19,8 +19,13 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import Switch from '@mui/material/Switch'
 import Button from '@mui/material/Button'
 
+import history from '../router/history'
+
 import Navigation from '../components/Navigation'
 import NavigationRender from '../components/Navigation/NavigationRender'
+const BasicModal = lazy(() => import('../components/Modal'))
+const LoginModal = lazy(() => import('../components/Modal/LoginModal'))
+const RegisterModal = lazy(() => import('../components/Modal/RegisterModal'))
 
 const drawerWidth = 240
 
@@ -84,8 +89,16 @@ const Dashboard = () => {
 		setOpen(!open)
 	}
 
+	const [modalContent, setModalContent] = useState(null)
+	const [openModal, setOpenModal] = useState(false)
+	const handleOpenModal = (content) => {
+		setModalContent(content)
+		setOpenModal(true)
+	}
+	const handleCloseModal = () => setOpenModal(false)
+
 	return (
-		<BrowserRouter>
+		<BrowserRouter history={history}>
 			<ThemeProvider theme={!darkMode ? lightTheme : darkTheme}>
 				<Box sx={{ display: 'flex' }}>
 					<CssBaseline />
@@ -116,12 +129,32 @@ const Dashboard = () => {
 							>
 								{title}
 							</Typography>
-							<Button variant="contained" sx={{ mr: '1em' }} color="secondary">
-								Loginik
+							<Button
+								variant="contained"
+								sx={{ mr: '1em' }}
+								color="secondary"
+								onClick={() =>
+									handleOpenModal(
+										<LoginModal handleCloseModal={handleCloseModal} />
+									)
+								}
+							>
+								Login
 							</Button>
-							<Button variant="contained" color="warning">
+							<Button
+								variant="contained"
+								color="warning"
+								onClick={() => handleOpenModal(<RegisterModal />)}
+							>
 								Register
 							</Button>
+							<Suspense fallback={<div>Loading...</div>}>
+								<BasicModal
+									open={openModal}
+									handleCloseModal={handleCloseModal}
+									children={modalContent}
+								/>
+							</Suspense>
 						</Toolbar>
 					</AppBar>
 					<Drawer variant="permanent" open={open}>
