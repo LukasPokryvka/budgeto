@@ -148,6 +148,9 @@ const Dashboard = () => {
 							>
 								Register
 							</Button>
+							<Button variant="contained" color="secondary">
+								Logout
+							</Button>
 							<Suspense fallback={<div>Loading...</div>}>
 								<BasicModal
 									open={openModal}
