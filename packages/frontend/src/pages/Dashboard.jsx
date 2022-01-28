@@ -1,6 +1,6 @@
-import { useState, Fragment, lazy, Suspense } from 'react'
-import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
+import { useState, Fragment, lazy, Suspense, useEffect } from 'react'
 import { BrowserRouter } from 'react-router-dom'
+import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import MuiDrawer from '@mui/material/Drawer'
 import Box from '@mui/material/Box'
@@ -20,9 +20,17 @@ import Switch from '@mui/material/Switch'
 import Button from '@mui/material/Button'
 
 import history from '../router/history'
+import {
+	getUser,
+	getToken,
+	setUserSession,
+	resetUserSession
+} from '../services/AuthService'
+import api from '../API/api'
 
 import Navigation from '../components/Navigation'
 import NavigationRender from '../components/Navigation/NavigationRender'
+import LogoutButton from '../components/LogoutButton'
 const BasicModal = lazy(() => import('../components/Modal'))
 const LoginModal = lazy(() => import('../components/Modal/LoginModal'))
 const RegisterModal = lazy(() => import('../components/Modal/RegisterModal'))
@@ -97,6 +105,31 @@ const Dashboard = () => {
 	}
 	const handleCloseModal = () => setOpenModal(false)
 
+	const [isAuthenticated, setIsAuthenticated] = useState(false)
+
+	useEffect(() => {
+		const token = getToken()
+		if (token == undefined || token === null || !token) {
+			return
+		}
+
+		const requestBody = {
+			user: getUser(),
+			token: JSON.parse(token)
+		}
+
+		api
+			.post('/verify', requestBody)
+			.then((res) => {
+				setUserSession(res.data.user, res.data.token)
+				setIsAuthenticated(true)
+			})
+			.catch(() => {
+				resetUserSession()
+				setIsAuthenticated(false)
+			})
+	}, [])
+
 	return (
 		<BrowserRouter history={history}>
 			<ThemeProvider theme={!darkMode ? lightTheme : darkTheme}>
@@ -129,28 +162,35 @@ const Dashboard = () => {
 							>
 								{title}
 							</Typography>
-							<Button
-								variant="contained"
-								sx={{ mr: '1em' }}
-								color="secondary"
-								onClick={() =>
-									handleOpenModal(
-										<LoginModal handleCloseModal={handleCloseModal} />
-									)
-								}
-							>
-								Login
-							</Button>
-							<Button
-								variant="contained"
-								color="warning"
-								onClick={() => handleOpenModal(<RegisterModal />)}
-							>
-								Register
-							</Button>
-							<Button variant="contained" color="secondary">
-								Logout
-							</Button>
+							{!isAuthenticated && (
+								<Button
+									variant="contained"
+									sx={{ mr: '1em' }}
+									color="secondary"
+									onClick={() =>
+										handleOpenModal(
+											<LoginModal
+												handleCloseModal={handleCloseModal}
+												setIsAuthenticated={setIsAuthenticated}
+											/>
+										)
+									}
+								>
+									Login
+								</Button>
+							)}
+							{!isAuthenticated && (
+								<Button
+									variant="contained"
+									color="warning"
+									onClick={() => handleOpenModal(<RegisterModal />)}
+								>
+									Register
+								</Button>
+							)}
+							{isAuthenticated && (
+								<LogoutButton setIsAuthenticated={setIsAuthenticated} />
+							)}
 							<Suspense fallback={<div>Loading...</div>}>
 								<BasicModal
 									open={openModal}

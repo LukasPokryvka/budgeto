@@ -1,6 +1,8 @@
 import { Suspense } from 'react'
 import { Routes, Route } from 'react-router-dom'
+
 import routes from '../../../router/routes'
+import { getToken } from '../../../services/AuthService'
 
 const NavigationRender = () => {
 	return (
@@ -11,7 +13,7 @@ const NavigationRender = () => {
 						key={route.path}
 						path={route.path}
 						exact
-						element={<route.component />}
+						element={getToken() ? <route.component /> : <div>Login please</div>}
 					></Route>
 				))}
 			</Routes>

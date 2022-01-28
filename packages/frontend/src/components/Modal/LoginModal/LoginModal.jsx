@@ -1,13 +1,14 @@
+import { useState } from 'react'
 import Typography from '@mui/material/Typography'
 import TextField from '@mui/material/TextField'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import { useState } from 'react'
+
 import api from '../../../API/api'
 import history from '../../../router/history'
 import { setUserSession } from '../../../services/AuthService'
 
-const LoginModal = ({ handleCloseModal }) => {
+const LoginModal = ({ handleCloseModal, setIsAuthenticated }) => {
 	const [username, setUsername] = useState('')
 	const [password, setPassword] = useState('')
 	const [message, setMessage] = useState(null)
@@ -32,6 +33,7 @@ const LoginModal = ({ handleCloseModal }) => {
 				setUserSession(res.data.user, res.data.token)
 				handleCloseModal()
 				history.push('/')
+				setIsAuthenticated(true)
 			})
 			.catch((err) => {
 				if (err.response.status === 401 || err.response.status === 403) {
